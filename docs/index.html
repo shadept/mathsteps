@@ -736,6 +736,7 @@
   </footer>
 
   <script>
+  document.addEventListener('DOMContentLoaded', function() {
     // ─── Scroll fade-in ───
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -864,6 +865,7 @@
 
       observer.observe(card);
     });
+  }); // end DOMContentLoaded
   </script>
 
 </body>
