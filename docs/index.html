@@ -562,6 +562,177 @@
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
+    /* ── Try it yourself ── */
+    .try-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .try-container {
+      background: var(--bg-raised);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-out);
+      padding: 2.5rem;
+      max-width: 620px;
+      width: 100%;
+      margin-top: 2rem;
+    }
+
+    .try-modes {
+      display: flex;
+      gap: 0;
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+      box-shadow: var(--shadow-in);
+      padding: 4px;
+      margin-bottom: 1.8rem;
+    }
+
+    .try-mode {
+      flex: 1;
+      padding: 0.6rem 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .try-mode.active {
+      background: var(--bg-raised);
+      color: var(--accent);
+      box-shadow: var(--shadow-out-sm);
+    }
+
+    .try-mode:not(.active):hover {
+      color: var(--text);
+    }
+
+    .try-input-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .try-input {
+      flex: 1;
+      padding: 0.85rem 1.1rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+      box-shadow: var(--shadow-in);
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 1rem;
+      color: var(--ink);
+      outline: none;
+      transition: all 0.25s ease;
+      -webkit-appearance: none;
+    }
+
+    .try-input::placeholder { color: var(--pencil); opacity: 0.6; }
+    .try-input:focus { box-shadow: var(--shadow-in), 0 0 0 2px rgba(192, 88, 58, 0.2); }
+
+    .try-go {
+      padding: 0.85rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(192, 88, 58, 0.2);
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .try-go:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 16px rgba(192, 88, 58, 0.3);
+    }
+
+    .try-go:active { transform: translateY(0); }
+
+    .try-hint {
+      font-size: 0.78rem;
+      color: var(--pencil);
+      margin-bottom: 1.5rem;
+      font-family: 'Caveat', cursive;
+      font-size: 0.9rem;
+    }
+
+    .try-results {
+      min-height: 60px;
+    }
+
+    .try-empty {
+      text-align: center;
+      color: var(--pencil);
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      padding: 2rem 0;
+    }
+
+    .try-error {
+      text-align: center;
+      color: var(--accent);
+      font-size: 0.9rem;
+      padding: 1.5rem 0;
+    }
+
+    .try-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .try-step + .try-step {
+      border-top: 1px solid var(--paper-line);
+    }
+
+    .try-step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-inset);
+      box-shadow: var(--shadow-in);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Caveat', cursive;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 0.15rem;
+    }
+
+    .try-step-content { flex: 1; min-width: 0; }
+
+    .try-step-math {
+      font-size: 1.15rem;
+      margin-bottom: 0.3rem;
+      overflow-x: auto;
+    }
+
+    .try-step-math .katex { color: var(--ink); }
+
+    .try-step-change {
+      font-size: 0.78rem;
+      color: var(--pencil);
+      font-family: 'Caveat', cursive;
+      font-size: 0.88rem;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .showcase-grid { grid-template-columns: 1fr; }
@@ -570,11 +741,15 @@
       .pipeline-step { max-width: 100%; }
       section { padding: 3.5rem 1.25rem; }
       .math-display { font-size: 1.2rem; }
+      .try-container { padding: 1.5rem; }
+      .try-modes { flex-wrap: wrap; }
+      .try-mode { min-width: 0; font-size: 0.78rem; }
     }
 
     @media (max-width: 480px) {
       .hero h1 { font-size: 3.5rem; }
       .hero-actions { flex-direction: column; align-items: center; }
+      .try-input-row { flex-direction: column; }
     }
   </style>
 </head>
@@ -651,6 +826,32 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ─── Try it yourself ─── -->
+  <section class="try-section">
+    <div class="section-label fade-in">Try it yourself</div>
+    <h2 class="section-title fade-in" style="text-align: center;">Type an expression, see the steps</h2>
+
+    <div class="try-container fade-in">
+      <div class="try-modes" id="tryModes">
+        <button class="try-mode active" data-mode="simplify">Simplify</button>
+        <button class="try-mode" data-mode="solve">Solve</button>
+        <button class="try-mode" data-mode="factor">Factor</button>
+        <button class="try-mode" data-mode="solveSimplify">Solve + Simplify</button>
+      </div>
+
+      <div class="try-input-row">
+        <input class="try-input" id="tryInput" type="text" placeholder="2x + 3x + 1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">
+        <button class="try-go" id="tryGo">Go</button>
+      </div>
+
+      <div class="try-hint" id="tryHint">e.g. 2x + 3x + 1</div>
+
+      <div class="try-results" id="tryResults">
+        <div class="try-empty">Type an expression above and hit Go</div>
+      </div>
     </div>
   </section>
 
@@ -735,6 +936,7 @@
     <p>Built by <a href="https://socratic.org" target="_blank" rel="noopener">Socratic</a>. Open source, forever.</p>
   </footer>
 
+  <script src="mathsteps.bundle.js"></script>
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     // ─── Scroll fade-in ───
@@ -865,6 +1067,154 @@
 
       observer.observe(card);
     });
+    // ─── Try it yourself ───
+    const tryModes = document.getElementById('tryModes');
+    const tryInput = document.getElementById('tryInput');
+    const tryGo = document.getElementById('tryGo');
+    const tryHint = document.getElementById('tryHint');
+    const tryResults = document.getElementById('tryResults');
+    let currentMode = 'simplify';
+
+    const hints = {
+      simplify: 'e.g. 2x + 3x + 1',
+      solve: 'e.g. 2x + 3 = 7',
+      factor: 'e.g. x^2 + 3x + 2',
+      solveSimplify: 'e.g. 2x + 3x = 15'
+    };
+
+    const placeholders = {
+      simplify: '2x + 3x + 1',
+      solve: '2x + 3 = 7',
+      factor: 'x^2 + 3x + 2',
+      solveSimplify: '2x + 3x = 15'
+    };
+
+    tryModes.addEventListener('click', function(e) {
+      const btn = e.target.closest('.try-mode');
+      if (!btn) return;
+      tryModes.querySelectorAll('.try-mode').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentMode = btn.dataset.mode;
+      tryInput.placeholder = placeholders[currentMode];
+      tryHint.textContent = hints[currentMode];
+    });
+
+    function formatChangeType(ct) {
+      return ct.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase());
+    }
+
+    function nodeToLatex(str) {
+      // Basic conversion of mathsteps output to something KaTeX-friendly
+      return str
+        .replace(/\*/g, ' \\cdot ')
+        .replace(/\^/g, '^')
+        .replace(/sqrt\(([^)]+)\)/g, '\\sqrt{$1}');
+    }
+
+    function equationToLatex(eq) {
+      var left = nodeToLatex(eq.leftNode.toString());
+      var right = nodeToLatex(eq.rightNode.toString());
+      return left + ' = ' + right;
+    }
+
+    function runTry() {
+      var expr = tryInput.value.trim();
+      if (!expr) return;
+
+      tryResults.innerHTML = '';
+      try {
+        var steps = [];
+
+        if (currentMode === 'simplify') {
+          var result = mathsteps.simplifyExpression(expr);
+          steps = result.map(function(s) {
+            return { math: nodeToLatex(s.newNode.toString()), change: formatChangeType(s.changeType) };
+          });
+          // Prepend original
+          steps.unshift({ math: nodeToLatex(expr), change: 'Original expression' });
+        } else if (currentMode === 'solve') {
+          var result = mathsteps.solveEquation(expr);
+          if (result.length > 0) {
+            steps.push({ math: equationToLatex(result[0].oldEquation), change: 'Original equation' });
+            result.forEach(function(s) {
+              steps.push({ math: equationToLatex(s.newEquation), change: formatChangeType(s.changeType) });
+            });
+          }
+        } else if (currentMode === 'factor') {
+          var result = mathsteps.factor(expr);
+          steps.unshift({ math: nodeToLatex(expr), change: 'Original expression' });
+          result.forEach(function(s) {
+            steps.push({ math: nodeToLatex(s.newNode.toString()), change: formatChangeType(s.changeType) });
+          });
+        } else if (currentMode === 'solveSimplify') {
+          // First solve, then simplify each side
+          var result = mathsteps.solveEquation(expr);
+          if (result.length > 0) {
+            steps.push({ math: equationToLatex(result[0].oldEquation), change: 'Original equation' });
+            result.forEach(function(s) {
+              steps.push({ math: equationToLatex(s.newEquation), change: formatChangeType(s.changeType) });
+            });
+          }
+          // Also show simplification of left side of original
+          var parts = expr.split('=');
+          if (parts.length >= 1) {
+            var simplified = mathsteps.simplifyExpression(parts[0].trim());
+            if (simplified.length > 0) {
+              steps.push({ math: '', change: '--- Simplifying left side ---' });
+              steps.push({ math: nodeToLatex(parts[0].trim()), change: 'Left side' });
+              simplified.forEach(function(s) {
+                steps.push({ math: nodeToLatex(s.newNode.toString()), change: formatChangeType(s.changeType) });
+              });
+            }
+          }
+        }
+
+        if (steps.length <= 1) {
+          tryResults.innerHTML = '<div class="try-empty">Already in simplest form!</div>';
+          return;
+        }
+
+        steps.forEach(function(step, i) {
+          var row = document.createElement('div');
+          row.className = 'try-step';
+
+          var num = document.createElement('div');
+          num.className = 'try-step-num';
+          num.textContent = i + 1;
+
+          var content = document.createElement('div');
+          content.className = 'try-step-content';
+
+          var mathDiv = document.createElement('div');
+          mathDiv.className = 'try-step-math';
+          if (step.math) {
+            try {
+              katex.render(step.math, mathDiv, { displayMode: false, throwOnError: false });
+            } catch(e) {
+              mathDiv.textContent = step.math;
+            }
+          }
+
+          var changeDiv = document.createElement('div');
+          changeDiv.className = 'try-step-change';
+          changeDiv.textContent = step.change;
+
+          content.appendChild(mathDiv);
+          content.appendChild(changeDiv);
+          row.appendChild(num);
+          row.appendChild(content);
+          tryResults.appendChild(row);
+        });
+      } catch(e) {
+        tryResults.innerHTML = '<div class="try-error">Could not process that expression. Check the syntax and try again.</div>';
+      }
+    }
+
+    tryGo.addEventListener('click', runTry);
+    tryInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') runTry();
+    });
+
   }); // end DOMContentLoaded
   </script>
 
