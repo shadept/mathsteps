@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mathsteps — Step-by-step math, solved beautifully</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f0ece4;
+      --bg-raised: #f5f1ea;
+      --bg-inset: #e6e1d8;
+      --text: #2c2c2c;
+      --text-muted: #7a7468;
+      --accent: #c0583a;
+      --accent-soft: rgba(192, 88, 58, 0.1);
+      --ink: #3a3632;
+      --pencil: #8b8278;
+      --paper-line: rgba(180, 170, 155, 0.2);
+      --shadow-out: 6px 6px 14px rgba(163, 157, 147, 0.35), -6px -6px 14px rgba(255, 255, 255, 0.8);
+      --shadow-out-sm: 3px 3px 8px rgba(163, 157, 147, 0.3), -3px -3px 8px rgba(255, 255, 255, 0.7);
+      --shadow-in: inset 3px 3px 7px rgba(163, 157, 147, 0.3), inset -3px -3px 7px rgba(255, 255, 255, 0.7);
+      --radius: 18px;
+      --radius-sm: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+
+    /* ── Subtle ruled-paper lines in hero ── */
+    .ruled-bg {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 39px,
+        var(--paper-line) 39px,
+        var(--paper-line) 40px
+      );
+      opacity: 0.5;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-raised);
+      box-shadow: var(--shadow-out-sm);
+      border-radius: 100px;
+      padding: 0.45rem 1.3rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .hero-badge span { color: var(--accent); font-weight: 600; }
+
+    .hero h1 {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      animation: fadeInUp 0.6s ease-out 0.08s both;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 1.2rem auto 2.5rem;
+      animation: fadeInUp 0.6s ease-out 0.16s both;
+    }
+
+    .hero-sub em {
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeInUp 0.6s ease-out 0.24s both;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(192, 88, 58, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(192, 88, 58, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--bg-raised);
+      color: var(--text);
+      box-shadow: var(--shadow-out-sm);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-out);
+    }
+
+    .install-cmd {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-raised);
+      box-shadow: var(--shadow-in);
+      border-radius: var(--radius-sm);
+      border: none;
+      padding: 0.85rem 1.5rem;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-top: 2rem;
+      animation: fadeInUp 0.6s ease-out 0.32s both;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .install-cmd:hover { color: var(--text); }
+    .install-cmd .dollar { color: var(--accent); user-select: none; }
+    .install-cmd .copy-hint {
+      font-size: 0.72rem;
+      color: var(--pencil);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .install-cmd:hover .copy-hint { opacity: 1; }
+
+    /* ── Sections ── */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+      color: var(--ink);
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Showcase cards ── */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .showcase-card {
+      background: var(--bg-raised);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-out);
+      transition: all 0.35s ease;
+      position: relative;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 8px 8px 20px rgba(163, 157, 147, 0.4), -8px -8px 20px rgba(255, 255, 255, 0.85);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-tag {
+      font-family: 'Caveat', cursive;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.25rem 0.9rem;
+      border-radius: 100px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .step-counter {
+      font-size: 0.8rem;
+      color: var(--pencil);
+    }
+
+    .math-display {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+      font-size: 1.5rem;
+    }
+
+    .math-display .katex { color: var(--ink); }
+
+    .step-label {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--pencil);
+      min-height: 1.5em;
+      margin-bottom: 1.5rem;
+      font-family: 'Caveat', cursive;
+      font-size: 1rem;
+    }
+
+    .step-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--bg-inset);
+      box-shadow: inset 1px 1px 3px rgba(163, 157, 147, 0.4), inset -1px -1px 3px rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .step-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(192, 88, 58, 0.3);
+    }
+
+    .card-controls {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .card-btn {
+      background: var(--bg-raised);
+      border: none;
+      color: var(--text);
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: var(--shadow-out-sm);
+      transition: all 0.25s ease;
+    }
+
+    .card-btn:hover {
+      box-shadow: var(--shadow-out);
+      transform: translateY(-1px);
+    }
+
+    .card-btn.next {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(192, 88, 58, 0.2);
+    }
+
+    .card-btn.next:hover {
+      box-shadow: 0 5px 16px rgba(192, 88, 58, 0.3);
+    }
+
+    /* ── Examples grid ── */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .example-card {
+      background: var(--bg-raised);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-out-sm);
+      transition: all 0.3s ease;
+    }
+
+    .example-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-out);
+    }
+
+    .example-label {
+      font-family: 'Caveat', cursive;
+      font-size: 0.95rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .example-math { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .example-math .katex { color: var(--ink); }
+
+    .example-arrow {
+      color: var(--pencil);
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      margin: 0.3rem 0;
+    }
+
+    /* ── Pipeline / How it works ── */
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    .pipeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 2rem 1.5rem;
+      background: var(--bg-raised);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-out);
+      min-width: 180px;
+      flex: 1;
+      max-width: 260px;
+      transition: all 0.3s ease;
+    }
+
+    .pipeline-step:hover {
+      transform: translateY(-3px);
+      box-shadow: 8px 8px 18px rgba(163, 157, 147, 0.38), -8px -8px 18px rgba(255, 255, 255, 0.82);
+    }
+
+    .pipeline-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      background: var(--bg-raised);
+      box-shadow: var(--shadow-in);
+      color: var(--accent);
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+    }
+
+    .pipeline-step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .pipeline-step p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 1.3rem;
+      color: var(--pencil);
+      font-family: 'Caveat', cursive;
+    }
+
+    /* ── Code block ── */
+    .code-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .code-block {
+      background: #2c2926;
+      border-radius: var(--radius);
+      padding: 0;
+      max-width: 680px;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 2rem;
+      box-shadow: var(--shadow-out);
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.2rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .code-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .code-dot:nth-child(1) { background: #e87461; }
+    .code-dot:nth-child(2) { background: #e8c86a; }
+    .code-dot:nth-child(3) { background: #7ec87e; }
+
+    .code-header span {
+      margin-left: 0.75rem;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.35);
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+
+    .code-body {
+      padding: 1.5rem;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      color: #d5cec5;
+    }
+
+    .code-body .kw { color: #d4926a; }
+    .code-body .fn { color: #8ab4d0; }
+    .code-body .str { color: #a3be8c; }
+    .code-body .cm { color: rgba(255, 255, 255, 0.25); }
+    .code-body .vr { color: #d5cec5; }
+    .code-body .pr { color: #c0583a; }
+    .code-body .op { color: rgba(255, 255, 255, 0.45); }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    footer::before {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--pencil);
+      opacity: 0.2;
+      margin: 0 auto 2rem;
+      border-radius: 2px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--ink); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .math-fade-enter {
+      animation: mathFade 0.35s ease-out;
+    }
+
+    @keyframes mathFade {
+      0% { opacity: 0; transform: scale(0.96) translateY(6px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .showcase-grid { grid-template-columns: 1fr; }
+      .pipeline { flex-direction: column; align-items: center; }
+      .pipeline-arrow { transform: rotate(90deg); }
+      .pipeline-step { max-width: 100%; }
+      section { padding: 3.5rem 1.25rem; }
+      .math-display { font-size: 1.2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 3.5rem; }
+      .hero-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Hero ─── -->
+  <header class="hero">
+    <div class="ruled-bg"></div>
+    <div class="hero-badge">
+      Open Source <span>·</span> <span>Apache 2.0</span>
+    </div>
+    <h1>mathsteps</h1>
+    <p class="hero-sub">Step-by-step math, solved beautifully. A JavaScript library that shows students <em>how</em> to get the answer.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://github.com/socraticorg/mathsteps" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-secondary" href="#showcase">See it in action</a>
+    </div>
+    <div class="install-cmd" onclick="navigator.clipboard.writeText('npm install mathsteps')">
+      <span class="dollar">$</span> npm install mathsteps
+      <span class="copy-hint">click to copy</span>
+    </div>
+  </header>
+
+  <!-- ─── Showcase ─── -->
+  <section id="showcase">
+    <div class="section-label fade-in">See it work</div>
+    <h2 class="section-title fade-in">Watch math unfold, step by step</h2>
+    <p class="section-subtitle fade-in">Click through each transformation to see how mathsteps breaks down problems into clear, understandable steps.</p>
+
+    <div class="showcase-grid">
+
+      <div class="showcase-card fade-in" data-card="simplify">
+        <div class="card-header">
+          <span class="card-tag">Simplify</span>
+          <span class="step-counter"><span class="current-step">1</span> / <span class="total-steps">4</span></span>
+        </div>
+        <div class="math-display" data-math></div>
+        <div class="step-label" data-label></div>
+        <div class="step-dots" data-dots></div>
+        <div class="card-controls">
+          <button class="card-btn prev" data-prev>&#8592; Back</button>
+          <button class="card-btn next" data-next>Next &#8594;</button>
+        </div>
+      </div>
+
+      <div class="showcase-card fade-in" data-card="solve">
+        <div class="card-header">
+          <span class="card-tag">Solve</span>
+          <span class="step-counter"><span class="current-step">1</span> / <span class="total-steps">4</span></span>
+        </div>
+        <div class="math-display" data-math></div>
+        <div class="step-label" data-label></div>
+        <div class="step-dots" data-dots></div>
+        <div class="card-controls">
+          <button class="card-btn prev" data-prev>&#8592; Back</button>
+          <button class="card-btn next" data-next>Next &#8594;</button>
+        </div>
+      </div>
+
+      <div class="showcase-card fade-in" data-card="factor">
+        <div class="card-header">
+          <span class="card-tag">Factor</span>
+          <span class="step-counter"><span class="current-step">1</span> / <span class="total-steps">3</span></span>
+        </div>
+        <div class="math-display" data-math></div>
+        <div class="step-label" data-label></div>
+        <div class="step-dots" data-dots></div>
+        <div class="card-controls">
+          <button class="card-btn prev" data-prev>&#8592; Back</button>
+          <button class="card-btn next" data-next>Next &#8594;</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── More examples ─── -->
+  <section>
+    <div class="section-label fade-in">Capabilities</div>
+    <h2 class="section-title fade-in">From arithmetic to algebra</h2>
+    <p class="section-subtitle fade-in">mathsteps handles a wide range of mathematical transformations.</p>
+
+    <div class="examples-grid" id="examplesGrid"></div>
+  </section>
+
+  <!-- ─── How it works ─── -->
+  <section>
+    <div class="section-label fade-in">Under the hood</div>
+    <h2 class="section-title fade-in">How it works</h2>
+    <p class="section-subtitle fade-in">Three stages turn a raw expression into a guided solution.</p>
+
+    <div class="pipeline fade-in">
+      <div class="pipeline-step">
+        <div class="pipeline-icon">f(x)</div>
+        <h3>Parse</h3>
+        <p>Expression string is parsed into an abstract syntax tree</p>
+      </div>
+      <div class="pipeline-arrow">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">&#8764;</div>
+        <h3>Transform</h3>
+        <p>200+ rules are applied to simplify, solve, or factor</p>
+      </div>
+      <div class="pipeline-arrow">&#8594;</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon">&#10003;</div>
+        <h3>Step</h3>
+        <p>Each change is recorded with a human-readable description</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Quick start ─── -->
+  <section class="code-section">
+    <div class="section-label fade-in">Get started</div>
+    <h2 class="section-title fade-in" style="text-align: center;">Up and running in seconds</h2>
+
+    <div class="code-block fade-in">
+      <div class="code-header">
+        <div class="code-dot"></div>
+        <div class="code-dot"></div>
+        <div class="code-dot"></div>
+        <span>example.js</span>
+      </div>
+      <div class="code-body">
+<span class="kw">const</span> <span class="vr">mathsteps</span> <span class="op">=</span> <span class="fn">require</span>(<span class="str">'mathsteps'</span>)<span class="op">;</span>
+<br><br>
+<span class="cm">// Simplify an expression step by step</span>
+<br>
+<span class="kw">const</span> <span class="vr">steps</span> <span class="op">=</span> <span class="vr">mathsteps</span>.<span class="fn">simplifyExpression</span>(<span class="str">'2x + 2x + x + x'</span>)<span class="op">;</span>
+<br><br>
+<span class="vr">steps</span>.<span class="fn">forEach</span>(<span class="vr">step</span> <span class="kw">=&gt;</span> {
+<br>
+&nbsp;&nbsp;<span class="vr">console</span>.<span class="fn">log</span>(<span class="vr">step</span>.<span class="pr">changeType</span>)<span class="op">;</span> &nbsp;<span class="cm">// e.g. ADD_POLYNOMIAL_TERMS</span>
+<br>
+&nbsp;&nbsp;<span class="vr">console</span>.<span class="fn">log</span>(<span class="vr">step</span>.<span class="pr">newNode</span>.<span class="fn">toString</span>())<span class="op">;</span> <span class="cm">// e.g. 6x</span>
+<br>
+})<span class="op">;</span>
+<br><br>
+<span class="cm">// Solve an equation</span>
+<br>
+<span class="kw">const</span> <span class="vr">solution</span> <span class="op">=</span> <span class="vr">mathsteps</span>.<span class="fn">solveEquation</span>(<span class="str">'2x + 3x = 35'</span>)<span class="op">;</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://github.com/socraticorg/mathsteps" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/socraticorg/mathsteps/blob/master/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+      <a href="https://github.com/socraticorg/mathsteps/blob/master/ROADMAP.md" target="_blank" rel="noopener">Roadmap</a>
+      <a href="https://github.com/socraticorg/mathsteps/blob/master/LICENSE" target="_blank" rel="noopener">Apache 2.0 License</a>
+    </div>
+    <p>Built by <a href="https://socratic.org" target="_blank" rel="noopener">Socratic</a>. Open source, forever.</p>
+  </footer>
+
+  <script>
+    // ─── Scroll fade-in ───
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ─── Showcase data ───
+    const showcaseData = {
+      simplify: {
+        steps: [
+          { math: '2x + 2x + x + x', label: 'Original expression' },
+          { math: '(2 + 2)x + x + x', label: 'Group like terms with matching coefficients' },
+          { math: '4x + x + x', label: 'Add the coefficients: 2 + 2 = 4' },
+          { math: '6x', label: 'Combine all like terms: 4 + 1 + 1 = 6' }
+        ]
+      },
+      solve: {
+        steps: [
+          { math: '2x + 3x = 35', label: 'Original equation' },
+          { math: '5x = 35', label: 'Combine like terms on the left side' },
+          { math: 'x = \\frac{35}{5}', label: 'Divide both sides by 5' },
+          { math: 'x = 7', label: 'Simplify the fraction' }
+        ]
+      },
+      factor: {
+        steps: [
+          { math: 'x^2 + 3x + 2', label: 'Original expression' },
+          { math: 'x^2 + 1x + 2x + 2', label: 'Find two numbers that multiply to 2 and add to 3' },
+          { math: '(x + 1)(x + 2)', label: 'Factor by grouping' }
+        ]
+      }
+    };
+
+    // ─── Initialize showcase cards ───
+    document.querySelectorAll('[data-card]').forEach(card => {
+      const type = card.dataset.card;
+      const data = showcaseData[type];
+      let currentStep = 0;
+
+      const mathEl = card.querySelector('[data-math]');
+      const labelEl = card.querySelector('[data-label]');
+      const dotsEl = card.querySelector('[data-dots]');
+      const counterCurrent = card.querySelector('.current-step');
+      const counterTotal = card.querySelector('.total-steps');
+      const prevBtn = card.querySelector('[data-prev]');
+      const nextBtn = card.querySelector('[data-next]');
+
+      counterTotal.textContent = data.steps.length;
+
+      data.steps.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'step-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        dotsEl.appendChild(dot);
+      });
+
+      function goTo(step) {
+        currentStep = step;
+        counterCurrent.textContent = step + 1;
+
+        mathEl.innerHTML = '';
+        mathEl.classList.remove('math-fade-enter');
+        void mathEl.offsetWidth;
+        mathEl.classList.add('math-fade-enter');
+        katex.render(data.steps[step].math, mathEl, {
+          displayMode: true,
+          throwOnError: false
+        });
+
+        labelEl.textContent = data.steps[step].label;
+
+        dotsEl.querySelectorAll('.step-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === step);
+        });
+
+        prevBtn.style.opacity = step === 0 ? '0.3' : '1';
+        nextBtn.textContent = step === data.steps.length - 1 ? '\u21BB Restart' : 'Next \u2192';
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) goTo(currentStep - 1);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentStep < data.steps.length - 1) goTo(currentStep + 1);
+        else goTo(0);
+      });
+
+      goTo(0);
+    });
+
+    // ─── More examples ───
+    const examples = [
+      { label: 'Fractions', from: '\\frac{2}{6}', to: '\\frac{1}{3}' },
+      { label: 'Distribution', from: '2(x + 3)', to: '2x + 6' },
+      { label: 'Exponents', from: 'x^2 \\cdot x^3', to: 'x^5' },
+      { label: 'Roots', from: '\\sqrt{72}', to: '6\\sqrt{2}' },
+      { label: 'Negative exponents', from: 'x^{-1}', to: '\\frac{1}{x}' },
+      { label: 'Equations', from: '\\frac{x}{2} = 4', to: 'x = 8' },
+    ];
+
+    const grid = document.getElementById('examplesGrid');
+    examples.forEach(ex => {
+      const card = document.createElement('div');
+      card.className = 'example-card fade-in';
+
+      const label = document.createElement('div');
+      label.className = 'example-label';
+      label.textContent = ex.label;
+
+      const fromEl = document.createElement('div');
+      fromEl.className = 'example-math';
+
+      const arrow = document.createElement('div');
+      arrow.className = 'example-arrow';
+      arrow.textContent = '\u2193';
+
+      const toEl = document.createElement('div');
+      toEl.className = 'example-math';
+
+      card.append(label, fromEl, arrow, toEl);
+      grid.appendChild(card);
+
+      katex.render(ex.from, fromEl, { throwOnError: false });
+      katex.render(ex.to, toEl, { throwOnError: false });
+
+      observer.observe(card);
+    });
+  </script>
+
+</body>
+</html>
